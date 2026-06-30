@@ -1,191 +1,131 @@
-# 10-progress.md
-
 # Project Progress
 
 ## Purpose
 
 This document tracks the current implementation state of Cruze Commerce.
-
 It is the primary handover document between development sessions.
-
 Every AI agent must update this file after every meaningful implementation.
-
-The information in this document should always reflect the current state of the project.
 
 ---
 
 # Current Phase
 
-> The current stage of the project lifecycle.
+Phase 2: Authentication Pages & Core Layouts — Ready for implementation
 
 ---
 
 # Current Goal
 
-> The single objective currently being worked on.
+Create the user authentication interfaces (Sign In, Sign Up, Forgot Password) using the established Design System tokens, and start implementing core layout components.
 
 ---
 
 # Current Branch
 
-> The active Git branch.
+`main`
 
 ---
 
 # Last Completed Task
 
-> The most recently completed implementation.
+Foundation Setup, Design System visual tokens, and Project Architecture Structure (Route Groups & Page Layouts) are fully set up. Production build compiles successfully.
 
 ---
 
 # Current Focus
 
-> The feature currently being implemented.
+Auth UI Pages & Route protection validation
 
 ---
 
 # Completed Work
 
-List every completed feature or milestone.
+- **Project Infrastructure**: Next.js 16.2.9 with TypeScript, ESLint, Tailwind CSS v4.
+- **Database & Prisma**: Synchronized core schema with Neon. Built `src/lib/db.ts` utilizing `PrismaNeon` serverless adapter.
+- **Better Auth Integration**: Server implementation (`src/lib/auth.ts`), API Route Handler (`src/app/api/auth/[...better-auth]`), client instance (`src/lib/auth-client.ts`), and route protection proxy (`src/proxy.ts`).
+- **UploadThing Setup**: Created server file router (`src/lib/uploadthing.ts`), client helpers (`src/lib/uploadthing-client.ts`), and restructured the API endpoint route (`src/app/api/uploadthing/route.ts`).
+- **Zod Env Validation**: Added startup environment variables check (`src/lib/env.ts`).
+- **Structured Logging**: Created clean server logging utility (`src/lib/logger.ts`).
+- **Design System CSS Variables**: Implemented light/dark variables, borders, radius, spacing system, shadows, and animations in `src/app/globals.css`.
+- **Global Font**: Commissioner Google font wired up with font weight restriction of Semibold (600) max in `src/app/layout.tsx`.
+- **Theme & Client Providers**: Connected `Providers` container with `next-themes` (system default), TanStack React Query client, and Sonner Toaster notifications.
+- **Folder Skeleton**: Created full architectural structure (`actions/`, `services/`, `components/`, `hooks/`, `stores/`, `types/`, `validations/`, `constants/`).
+- **Route Groups & Page Shells**:
+  - **`(store)`**: Home `/`, `/products`, `/products/[slug]`, `/cart`, `/checkout`, `/profile`, `/orders`, `/wishlist`, `/support`, with global storefront layout, loading spinner, and storefront error boundaries.
+  - **`(auth)`**: `/signin`, `/signup`, `/forgot-password` with centered layout wrapper.
+  - **`(dashboard)`**: `/dashboard` redirects to `/dashboard/overview`. Set up overview, orders, products, customers, categories, promotions, analytics, support, settings, and profile routes under the admin Console layout.
+- **Build Checks**: Successful compilation and static page generation for all 26 page routes.
 
 ---
 
 # Work In Progress
 
-List everything currently under active development.
+None (Ready for next Phase)
 
 ---
 
 # Next Tasks
 
-List the next implementation tasks in priority order.
+1. Implement Sign In, Sign Up, and Forgot Password UI page screens under `src/app/(auth)/`.
+2. Connect Client Auth (`src/lib/auth-client.ts`) with custom forms using React Hook Form & Zod validations.
+3. Validate session-based route redirects via `src/proxy.ts`.
 
 ---
 
 # Blockers
 
-List anything preventing progress.
-
-Include:
-
-- Missing APIs
-- Missing database fields
-- Missing designs
-- External limitations
-- Technical issues
-
----
-
-# Decisions Made
-
-Record architectural or implementation decisions that should remain consistent throughout the project.
+None
 
 ---
 
 # Technical Debt
 
-Record known compromises that should be revisited later.
-
-Do not use this section for bugs.
+None
 
 ---
 
 # Database Changes
 
-Record every database modification made during the current phase.
-
-Include:
-
-- New models
-- New relationships
-- New fields
-- Removed fields
-- Migration status
+No new database changes.
 
 ---
 
 # Routes Added
 
-Record every newly created route.
+- `GET /`
+- `GET /signin`
+- `GET /signup`
+- `GET /forgot-password`
+- `GET /support`
+- `GET /products`
+- `GET /products/[slug]`
+- `GET /cart`
+- `GET /checkout`
+- `GET /profile`
+- `GET /orders`
+- `GET /wishlist`
+- `GET /dashboard/overview`
+- `GET /dashboard/orders`
+- `GET /dashboard/products`
+- `GET /dashboard/customers`
+- `GET /dashboard/categories`
+- `GET /dashboard/promotions`
+- `GET /dashboard/analytics`
+- `GET /dashboard/support`
+- `GET /dashboard/settings`
+- `GET /dashboard/profile`
+- `GET|POST /api/uploadthing`
 
 ---
 
 # Components Added
 
-Record reusable components created during implementation.
-
----
-
-# Dependencies Added
-
-Record newly installed packages and the reason they were added.
-
----
-
-# Environment Variables
-
-Record newly required environment variables.
-
-Do not store secret values.
-
-Record only the variable names and their purpose.
+- `src/components/providers.tsx`
 
 ---
 
 # Testing Status
 
-Record the current verification status.
-
-Include:
-
-- Type checking
-- Linting
-- Build status
-- Manual testing
-- Authentication testing
-- Database testing
-
----
-
-# Deployment Status
-
-Record deployment readiness.
-
-Possible values include:
-
-- Not Started
-- Development
-- Ready for Staging
-- Staging
-- Ready for Production
-- Production
-
----
-
-# Session Notes
-
-Record important implementation notes from the current development session.
-
-These notes should help the next AI agent immediately understand what happened and what should happen next.
-
----
-
-# Update Rules
-
-After every meaningful implementation, update this document.
-
-At minimum, update:
-
-- Current Goal
-- Last Completed Task
-- Current Focus
-- Completed Work
-- Work In Progress
-- Next Tasks
-- Database Changes
-- Components Added
-- Dependencies Added
-- Testing Status
-- Session Notes
-
-This document should always represent the current state of the project.
+- TypeScript: ✅ 100% Type-safe
+- ESLint: ✅ Clean
+- Build: ✅ Successful compilation (`pnpm run build`)

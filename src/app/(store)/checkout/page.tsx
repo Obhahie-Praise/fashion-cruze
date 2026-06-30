@@ -1,0 +1,1 @@
+﻿export default function CheckoutPage() { return ( <div className='py-8'> <h1 className='text-3xl font-semibold tracking-tight'>Checkout</h1> <p className='mt-2 text-sm text-muted-foreground'>Complete your purchase placeholder.</p> </div> ); }

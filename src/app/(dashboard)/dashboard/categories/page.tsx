@@ -1,0 +1,1 @@
+﻿export default function CategoriesPage() { return ( <div className='space-y-6'> <h1 className='text-3xl font-semibold tracking-tight'>Categories</h1> <p className='text-sm text-muted-foreground'>Category taxonomy management placeholder.</p> </div> ); }

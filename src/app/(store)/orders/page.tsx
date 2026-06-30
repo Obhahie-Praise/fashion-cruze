@@ -1,0 +1,1 @@
+﻿export default function OrdersPage() { return ( <div className='py-8'> <h1 className='text-3xl font-semibold tracking-tight'>Order History</h1> <p className='mt-2 text-sm text-muted-foreground'>Review your previous purchases placeholder.</p> </div> ); }

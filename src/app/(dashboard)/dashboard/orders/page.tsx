@@ -1,0 +1,1 @@
+﻿export default function OrdersPage() { return ( <div className='space-y-6'> <h1 className='text-3xl font-semibold tracking-tight'>Orders</h1> <p className='text-sm text-muted-foreground'>Order management placeholder.</p> </div> ); }

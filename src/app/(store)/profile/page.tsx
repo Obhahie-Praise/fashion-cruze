@@ -1,0 +1,1 @@
+﻿export default function ProfilePage() { return ( <div className='py-8'> <h1 className='text-3xl font-semibold tracking-tight'>User Profile</h1> <p className='mt-2 text-sm text-muted-foreground'>Manage your personal settings placeholder.</p> </div> ); }

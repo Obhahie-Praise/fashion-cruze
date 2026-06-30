@@ -1,0 +1,1 @@
+﻿export default function AdminProfilePage() { return ( <div className='space-y-6'> <h1 className='text-3xl font-semibold tracking-tight'>Admin Profile</h1> <p className='text-sm text-muted-foreground'>Administrator personal profile placeholder.</p> </div> ); }

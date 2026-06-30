@@ -1,0 +1,1 @@
+﻿export default function SupportPage() { return ( <div className='space-y-6'> <h1 className='text-3xl font-semibold tracking-tight'>Support</h1> <p className='text-sm text-muted-foreground'>Customer support ticketing and query handling placeholder.</p> </div> ); }

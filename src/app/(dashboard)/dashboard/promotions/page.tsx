@@ -1,0 +1,1 @@
+﻿export default function PromotionsPage() { return ( <div className='space-y-6'> <h1 className='text-3xl font-semibold tracking-tight'>Promotions</h1> <p className='text-sm text-muted-foreground'>Deals and campaign management placeholder.</p> </div> ); }

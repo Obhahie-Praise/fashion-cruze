@@ -1,0 +1,86 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "postgresql"
+  relationMode = "prisma"
+}
+
+model User {
+  id                      String    @id @default(cuid())
+  email                   String    @unique
+  name                    String
+  emailVerified           Boolean   @default(false)
+  image                   String?
+  role                    String?   @default("customer")
+  banned                  Boolean?  @default(false)
+  banReason               String?
+  banExpires              DateTime?
+  
+  // Identity Custom Fields
+  firstName               String?
+  lastName                String?
+  displayName             String?
+  phoneNumber             String?
+  avatar                  String?
+  
+  // Account Status Custom Fields
+  accountStatus           String?   @default("active")
+  authenticationStatus    String?
+  emailVerificationStatus String?   @default("unverified")
+
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+  sessions                Session[]
+  accounts                Account[]
+
+  @@map("user")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  expiresAt DateTime
+  token     String   @unique
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  userId                String
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  idToken               String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([providerId, accountId])
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
+
+  @@map("verification")
+}

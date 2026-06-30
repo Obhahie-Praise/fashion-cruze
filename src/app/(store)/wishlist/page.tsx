@@ -1,0 +1,1 @@
+﻿export default function WishlistPage() { return ( <div className='py-8'> <h1 className='text-3xl font-semibold tracking-tight'>Wishlist</h1> <p className='mt-2 text-sm text-muted-foreground'>Your saved items placeholder.</p> </div> ); }

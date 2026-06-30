@@ -1,0 +1,1 @@
+﻿export default function CartPage() { return ( <div className='py-8'> <h1 className='text-3xl font-semibold tracking-tight'>Shopping Cart</h1> <p className='mt-2 text-sm text-muted-foreground'>Your selected items placeholder.</p> </div> ); }
