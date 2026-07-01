@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { PanelLeftIcon, SearchIcon, BellIcon } from "lucide-react";
+import { PanelLeftIcon, SearchIcon } from "lucide-react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
-import { DashboardUserMenu } from "@/components/dashboard/dashboard-user-menu";
+import { DashboardNotifications } from "@/components/dashboard/dashboard-notifications";
 import { DashboardSidebarInner } from "@/components/dashboard/dashboard-sidebar";
 import { useState } from "react";
 
@@ -38,7 +38,7 @@ function segmentToLabel(segment: string): string {
  *
  * Left:   Sidebar toggle button | Search button
  * Centre: Shadcn Breadcrumb (auto-generated from pathname)
- * Right:  Notifications | Theme toggle | User menu
+ * Right:  Notifications | Theme toggle
  */
 export function DashboardTopNav({ onToggleSidebar }: DashboardTopNavProps) {
   const pathname = usePathname();
@@ -48,8 +48,8 @@ export function DashboardTopNav({ onToggleSidebar }: DashboardTopNavProps) {
   const segments = pathname.split("/").filter(Boolean);
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center border-b border-border bg-background">
-      <div className="flex w-full items-center gap-4 px-4">
+    <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center bg-background">
+      <div className="flex w-full items-center gap-4 pr-4 pl-2 relative justify-between">
 
         {/* ── Left: mobile toggle + desktop toggle + search ── */}
         <div className="flex items-center gap-2">
@@ -77,7 +77,7 @@ export function DashboardTopNav({ onToggleSidebar }: DashboardTopNavProps) {
           <button
             type="button"
             aria-label="Search"
-            className="hidden items-center gap-2 rounded-md border border-border bg-muted/40 px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:flex"
+            className="hidden items-center gap-2 rounded-md border border-border/60 bg-muted/20 px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:flex md:w-50"
           >
             <SearchIcon size={14} aria-hidden="true" />
             <span>Search…</span>
@@ -85,7 +85,7 @@ export function DashboardTopNav({ onToggleSidebar }: DashboardTopNavProps) {
         </div>
 
         {/* ── Centre: Breadcrumb ── */}
-        <div className="flex flex-1 items-center justify-center">
+        <div className="flex flex-1 items-center justify-center absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2">
           <Breadcrumb>
             <BreadcrumbList>
               {segments.map((segment, index) => {
@@ -112,20 +112,10 @@ export function DashboardTopNav({ onToggleSidebar }: DashboardTopNavProps) {
           </Breadcrumb>
         </div>
 
-        {/* ── Right: Notifications + Theme + User ── */}
+        {/* ── Right: Notifications + Theme ── */}
         <div className="flex items-center gap-1">
-          {/* Notifications — reserved for future implementation */}
-          <button
-            type="button"
-            aria-label="Notifications"
-            className="flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            <BellIcon size={16} aria-hidden="true" />
-          </button>
-
+          <DashboardNotifications />
           <ThemeToggle />
-
-          <DashboardUserMenu />
         </div>
       </div>
 

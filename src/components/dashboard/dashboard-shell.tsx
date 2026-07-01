@@ -29,7 +29,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
         aria-label="Sidebar navigation"
         className={cn(
           "hidden md:flex md:flex-col md:shrink-0",
-          "border-r border-border bg-background",
+          "bg-background",
           "transition-[width] duration-200 ease-in-out",
           isCollapsed ? "w-16" : "w-56"
         )}
@@ -45,7 +45,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
 
         <main
           id="main-content"
-          className="flex-1 overflow-y-auto p-6 md:p-8"
+          className="flex-1 overflow-y-auto p-6 md:p-8 border-l border-t border-border rounded-tl-3xl"
           tabIndex={-1}
         >
           {children}

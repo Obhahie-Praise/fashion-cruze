@@ -40,11 +40,11 @@ export function SidebarNavItem({
             aria-label={isCollapsed ? label : undefined}
             aria-current={isActive ? "page" : undefined}
             className={cn(
-              "group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+              "group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
               isActive
-                ? "bg-primary text-primary-foreground"
-                : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                ? "bg-primary text-primary-foreground shadow-md shadow-muted-foreground/80"
+                : "text-muted-foreground/75 hover:text-foreground/80",
               isCollapsed && "justify-center px-2"
             )}
           />

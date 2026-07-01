@@ -13,6 +13,7 @@ import {
   SettingsIcon,
 } from "lucide-react";
 import { SidebarNavItem } from "@/components/dashboard/sidebar-nav-item";
+import { DashboardUserMenu } from "@/components/dashboard/dashboard-user-menu";
 import { cn } from "@/lib/utils";
 
 interface NavItem {
@@ -110,7 +111,7 @@ export function DashboardSidebarInner({ isCollapsed }: DashboardSidebarInnerProp
       {/* Brand header */}
       <div
         className={cn(
-          "flex h-16 shrink-0 items-center border-b border-border px-4",
+          "flex h-16 shrink-0 items-center px-2",
           isCollapsed ? "justify-center" : "gap-2"
         )}
       >
@@ -120,9 +121,11 @@ export function DashboardSidebarInner({ isCollapsed }: DashboardSidebarInnerProp
           </span>
         </div>
         {!isCollapsed && (
-          <span className="text-sm font-semibold tracking-tight text-foreground">
-            Cruze Console
-          </span>
+          <p className="text-sm font-semibold tracking-tight text-foreground">
+            <span className="">Cruze</span>
+            <span className="block text-xs font-thin text-muted-foreground">Admin</span>
+            
+          </p>
         )}
       </div>
 
@@ -132,11 +135,12 @@ export function DashboardSidebarInner({ isCollapsed }: DashboardSidebarInnerProp
         aria-label="Dashboard navigation"
       >
         {/* Management group */}
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-1">
           {!isCollapsed && (
-            <p className="mb-1 px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground/60">
+            <p className="mb-2 text-sm text-foreground/80">
               Management
             </p>
+
           )}
           {managementItems.map((item) => (
             <SidebarNavItem
@@ -154,7 +158,7 @@ export function DashboardSidebarInner({ isCollapsed }: DashboardSidebarInnerProp
         {/* System group */}
         <div className="flex flex-col gap-0.5">
           {!isCollapsed && (
-            <p className="mb-1 px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground/60">
+            <p className="mb-2 text-sm text-foreground/80">
               System
             </p>
           )}
@@ -171,6 +175,11 @@ export function DashboardSidebarInner({ isCollapsed }: DashboardSidebarInnerProp
           ))}
         </div>
       </nav>
+
+      {/* Profile Section */}
+      <div className="shrink-0 p-1">
+        <DashboardUserMenu isCollapsed={isCollapsed} />
+      </div>
     </div>
   );
 }

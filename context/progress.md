@@ -157,11 +157,12 @@ None
 
 - `src/components/providers.tsx` (updated — TooltipProvider added)
 - `src/components/shared/theme-toggle.tsx`
+- **Admin Dashboard Shell Refinements**:
+  - Moved the `DashboardUserMenu` from the top navigation to the bottom of the `DashboardSidebarInner`, updating it to be a full-width interactive row displaying the user's avatar, name, and role. It automatically handles the collapsed sidebar state.
+  - Implemented the Notification UI (`DashboardNotifications`) in the top navigation, including a real-time unread count badge.
+  - Developed `NotificationService` to integrate with the Prisma `Notification` model, offering functions to create, read, and manage notifications.
+  - Created Server Actions in `src/actions/notifications.ts` to power the client-side TanStack React Query logic inside the notification dropdown.
 - `src/components/dashboard/dashboard-shell.tsx`
-- `src/components/dashboard/dashboard-sidebar.tsx`
-- `src/components/dashboard/sidebar-nav-item.tsx`
-- `src/components/dashboard/dashboard-topnav.tsx`
-- `src/components/dashboard/dashboard-user-menu.tsx`
 - `src/components/shared/auth-carousel.tsx`
 - `src/components/shared/social-auth.tsx`
 - `src/components/ui/tooltip.tsx`

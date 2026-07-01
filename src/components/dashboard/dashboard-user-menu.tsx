@@ -6,6 +6,7 @@ import {
   UserIcon,
   SettingsIcon,
   LogOutIcon,
+  ChevronsUpDownIcon,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -17,19 +18,28 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useSession, signOut } from "@/lib/auth-client";
+import { cn } from "@/lib/utils";
+
+interface DashboardUserMenuProps {
+  isCollapsed?: boolean;
+}
 
 /**
  * DashboardUserMenu
  *
- * Avatar button that opens a Shadcn DropdownMenu with Profile, Settings,
- * and Sign Out actions. Reads the current session from Better Auth.
+ * Profile section anchored to the bottom of the sidebar.
+ * Spans the available width when expanded, showing avatar, name, and role.
+ * Opens a DropdownMenu with Profile, Settings, and Sign Out actions.
  */
-export function DashboardUserMenu() {
+export function DashboardUserMenu({
+  isCollapsed = false,
+}: DashboardUserMenuProps) {
   const { data: session } = useSession();
   const router = useRouter();
 
   const name = session?.user?.name ?? "Admin";
   const email = session?.user?.email ?? "";
+  const role = session?.user?.role ?? "Administrator";
 
   // Generate initials from the user's name (max 2 characters)
   const initials = name
@@ -51,23 +61,57 @@ export function DashboardUserMenu() {
           <button
             type="button"
             aria-label={`Account menu for ${name}`}
-            className="flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-semibold text-muted-foreground ring-1 ring-border transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className={cn(
+              "flex items-center gap-3 rounded-md p-2 text-left transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring w-full",
+              isCollapsed && "justify-center",
+            )}
           />
         }
       >
-        {initials || <UserIcon size={14} />}
+        <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-primary text-xs font-semibold text-primary-foreground">
+          {initials || <UserIcon size={14} />}
+        </div>
+        {!isCollapsed && (
+          <>
+            <div className="flex flex-1 flex-col overflow-hidden">
+              <span className="truncate text-sm font-medium text-foreground">
+                {name}
+              </span>
+              <span className="truncate text-xs text-muted-foreground">
+                {email}
+              </span>
+            </div>
+            <ChevronsUpDownIcon
+              size={14}
+              className="shrink-0 text-muted-foreground"
+              aria-hidden="true"
+            />
+          </>
+        )}
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent align="end" side="bottom" sideOffset={8}>
+      <DropdownMenuContent
+        align={isCollapsed ? "start" : "end"}
+        side={isCollapsed ? "right" : "bottom"}
+        sideOffset={8}
+        className={isCollapsed ? "" : "w-52"}
+      >
         {/* User identity label */}
-        <DropdownMenuLabel className="flex flex-col">
-          <span className="text-sm font-medium text-foreground">{name}</span>
-          {email && (
-            <span className="text-xs text-muted-foreground">{email}</span>
-          )}
-        </DropdownMenuLabel>
-
-        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuLabel className="flex justify-between items-center p-1 shadow shadow-muted border-0.5 border-border/50 rounded-sm">
+            <div className="flex flex-col">
+              <span className="text-sm font-medium text-foreground">
+                {name}
+              </span>
+              {email && (
+                <span className="text-xs text-muted-foreground">{email}</span>
+              )}
+            </div>
+            <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-primary text-xs font-semibold text-primary-foreground">
+              {initials || <UserIcon size={14} />}
+            </div>
+          </DropdownMenuLabel>
+        </DropdownMenuGroup>
 
         <DropdownMenuGroup>
           <DropdownMenuItem render={<Link href="/dashboard/profile" />}>
@@ -81,16 +125,16 @@ export function DashboardUserMenu() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
 
-        <DropdownMenuSeparator />
-
-        <DropdownMenuItem
-          variant="destructive"
-          onSelect={handleSignOut}
-          className="cursor-pointer"
-        >
-          <LogOutIcon size={14} aria-hidden="true" />
-          Sign out
-        </DropdownMenuItem>
+        <DropdownMenuGroup>
+          <DropdownMenuItem
+            variant="destructive"
+            onSelect={handleSignOut}
+            className="cursor-pointer"
+          >
+            <LogOutIcon size={14} aria-hidden="true" />
+            Sign out
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );
