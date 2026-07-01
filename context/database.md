@@ -1,18 +1,12 @@
-# 08-database.md
-
-# Database Specification
+# Database
 
 ## Purpose
 
-This document defines the complete business data model for Cruze Commerce.
+This document defines the business entities that make up Cruze Commerce.
 
-It is the single source of truth for all application data.
+It is the source of truth for every database model, relationship, and business object in the application.
 
-It does not define ORM syntax or implementation details.
-
-Every database model should be derived from this document.
-
-Every new feature requiring persistent data must update this document before implementation.
+Every database change should extend this architecture rather than replace it.
 
 ---
 
@@ -20,600 +14,445 @@ Every new feature requiring persistent data must update this document before imp
 
 Every model should:
 
-* Have a unique identifier.
-* Record creation time.
-* Record last update time.
-* Support future analytics.
-* Preserve historical data whenever possible.
-* Avoid destructive deletion unless explicitly required.
+* Have a clear business purpose.
+* Be normalized where appropriate.
+* Support future expansion.
+* Maintain referential integrity.
+* Include timestamps.
+* Support analytics where valuable.
+* Avoid duplicate data.
 
 ---
 
-# Authentication
+# Identity
 
-Stores authentication and authorization information.
+## User
 
-## Contains
+Represents every registered customer and administrator.
 
-* User account
-* Authentication provider
-* Email verification
-* Password hash
-* Active session information
-* Remember Me preference
-* Password reset tokens
-* Verification tokens
+Responsibilities include:
 
-## Relationships
-
-Belongs to one User.
+* Authentication
+* Authorization
+* Customer profile
+* Roles
+* Preferences
 
 ---
 
-# User
+## Session
 
-Represents every person using the platform.
+Managed by Better Auth.
 
-## Contains
-
-### Identity
-
-* First name
-* Last name
-* Display name
-* Email
-* Avatar
-* Phone number
-
-### Account
-
-* Role
-* Account status
-* Authentication status
-* Email verification status
-
-### Customer Information
-
-* Default shipping address
-* Billing address
-* Wishlist
-* Shopping cart
-
-### Analytics
-
-* Lifetime spending
-* Total orders
-* Total completed orders
-* Total cancelled orders
-* Average order value
-* First purchase
-* Most recent purchase
-* Total products viewed
-* Total products purchased
-* Promotional purchases
-* Referral source
-* Last active date
-
-### Relationships
-
-* Orders
-* Payments
-* Cart
-* Wishlist
-* Addresses
-* Support tickets
-* Notifications
+Stores active user sessions.
 
 ---
 
-# Address
+## Account
 
-Stores shipping and billing addresses.
+Managed by Better Auth.
 
-## Contains
-
-* Recipient
-* Phone number
-* Country
-* State
-* City
-* Postal code
-* Street
-* Landmark
-* Default address
-
-Relationship:
-
-Belongs to one User.
+Stores OAuth provider information.
 
 ---
 
-# Product
+## Verification
 
-Represents every product available for purchase.
+Managed by Better Auth.
 
-## Contains
+Stores verification and password recovery records.
 
-### Basic Information
+---
 
-* Name
-* Slug
-* Description
-* Short description
+## Address
 
-### Pricing
+Stores customer shipping and billing addresses.
 
-* Cost price
-* Selling price
-* Discount price
-* Profit margin
+One customer may have multiple saved addresses.
 
-### Inventory
+---
 
-* Quantity
-* Reserved quantity
-* Sold quantity
-* Low stock threshold
+# Catalog
 
-### Categorization
+## Product
 
-* Category
-* Tags
-* Keywords
+Represents a sellable item.
+
+Should contain all information required to display, search, sell, and analyse a product.
+
+---
+
+## Product Image
+
+Stores uploaded product images.
+
+Supports multiple images per product.
+
+Supports a designated cover image.
+
+---
+
+## Category
+
+Groups products into logical collections.
+
+Categories should support future nesting if required.
+
+---
+
+## Variant
+
+Represents purchasable variations of a product.
+
+Examples include:
+
+* Size
+* Colour
 * Material
+
+Products may have multiple variants.
+
+---
+
+## Product Attribute
+
+Stores reusable product characteristics.
+
+Examples include:
+
+* Fabric
+* Style
 * Occasion
 * Season
-* Target audience
-
-### Media
-
-* Multiple images
-* Cover image
-
-### Visibility
-
-* Published
-* Featured
-* Archived
-* Active promotion
-
-### Analytics
-
-* Views
-* Cart additions
-* Purchases
-* Wishlist additions
-* Conversion rate
-* Revenue generated
-* Average rating
-
-Relationships:
-
-* Category
-* Promotion
-* Order Items
-* Cart Items
-* Wishlist Items
 
 ---
 
-# Category
+# Inventory
 
-Groups products.
+## Inventory
 
-## Contains
+Stores current stock information.
 
-* Name
-* Description
-* Target audience
-* Occasion
-* Season
-* Material
-* Display order
-* Active status
-
-Relationship:
-
-Contains many Products.
+Should remain synchronized with inventory movements.
 
 ---
 
-# Promotion
+## Inventory Movement
 
-Represents promotional campaigns.
+Records every stock adjustment.
 
-## Contains
+Every movement should include a reason.
 
-* Title
-* Description
-* Banner
-* Start date
-* End date
-* Status
-* Priority
-* Featured flag
+Examples include:
 
-### Analytics
-
-* Total clicks
-* Total purchases
-* Revenue generated
-* Products included
-
-Relationship:
-
-Contains many Products.
+* Purchase
+* Sale
+* Return
+* Restock
+* Damage
+* Manual adjustment
 
 ---
 
-# Cart
+# Customer Behaviour
 
-Represents a customer's active shopping cart.
+## Cart
 
-## Contains
+Represents an active shopping cart.
 
-* Owner
-* Items
-* Total quantity
-* Total price
-* Last updated
-
-Relationship:
-
-Belongs to one User.
-
-Contains many Cart Items.
+One customer owns one active cart.
 
 ---
 
-# Cart Item
+## Cart Item
 
-Represents a product inside a shopping cart.
+Represents a product inside a cart.
 
-## Contains
-
-* Product
-* Quantity
-* Selected variant
-* Unit price
-* Total price
-
-Relationships
-
-Belongs to Cart.
-
-Belongs to Product.
+Supports quantity and selected variant.
 
 ---
 
-# Wishlist
+## Wishlist
 
-Represents saved products.
-
-## Contains
-
-* Owner
-* Saved products
-* Date added
-
-Relationship:
-
-Belongs to User.
-
-Contains many Products.
+Stores products a customer wishes to purchase later.
 
 ---
 
-# Order
+## Product View
+
+Records when customers view products.
+
+Supports future recommendation systems.
+
+---
+
+## Search History
+
+Stores customer search activity.
+
+Supports analytics and future search optimization.
+
+---
+
+## Recently Viewed
+
+Tracks products recently viewed by each customer.
+
+---
+
+# Orders
+
+## Order
 
 Represents a completed purchase.
 
-## Contains
+Contains customer, pricing, payment, and fulfillment information.
 
-### Customer
+---
 
-* Customer
-* Shipping address
-* Billing address
+## Order Item
 
-### Financial
+Represents an individual purchased product.
 
-* Subtotal
-* Discount
-* Shipping fee
-* Taxes
-* Total paid
-* Currency
+Stores a snapshot of product information at the time of purchase.
 
-### Status
+---
 
-* Pending
+## Order Status History
+
+Tracks every status change throughout the order lifecycle.
+
+Examples include:
+
+* Placed
+* Confirmed
+* Packed
 * Ready
+* Dispatched
 * Delivered
 * Cancelled
 * Refunded
 
-### Payment
+---
 
-* Payment reference
-* Payment status
-* Payment provider
+## Refund
 
-### Logistics
+Stores refund requests and completed refunds.
 
-* Tracking number
-* Shipping method
-* Delivery date
-
-### Analytics
-
-* Profit
-* Total items
-* Promotion used
-* Customer type
-* Purchase source
-
-Relationships
-
-Belongs to User.
-
-Contains many Order Items.
-
-Belongs to Payment.
+Includes reason, amount, status, and administrator action.
 
 ---
 
-# Order Item
+# Payments
 
-Represents a purchased product.
+## Payment
 
-## Contains
+Represents a payment associated with an order.
 
-* Product
-* Quantity
-* Variant
-* Selling price
-* Cost price
-* Profit
-
-Relationship
-
-Belongs to Order.
-
-Belongs to Product.
+Stores gateway references and payment status.
 
 ---
 
-# Payment
+## Payment Attempt
 
-Stores payment information.
+Records every payment attempt.
 
-## Contains
+Supports retries and failure analysis.
 
-* Provider
-* Reference
-* Status
-* Amount
+---
+
+## Payment Webhook
+
+Stores webhook payloads received from the payment gateway.
+
+Used for reconciliation and auditing.
+
+---
+
+# Marketing
+
+## Promotion
+
+Represents promotional campaigns.
+
+Examples include:
+
+* Flash Sale
+* Weekend Deals
+* Clearance
+* New Arrival Campaigns
+
+---
+
+## Promotion Product
+
+Maps products to promotions.
+
+Allows products to participate in multiple campaigns.
+
+---
+
+## Banner
+
+Stores promotional banners displayed throughout the storefront.
+
+---
+
+## Newsletter Subscriber
+
+Stores newsletter subscriptions.
+
+---
+
+# Support
+
+## Ticket
+
+Represents a customer support conversation.
+
+---
+
+## Ticket Message
+
+Stores messages exchanged within a support ticket.
+
+---
+
+## Ticket Attachment
+
+Stores uploaded files associated with support conversations.
+
+---
+
+# Notifications
+
+## Notification
+
+Represents in-app notifications.
+
+Supports future email and push notification integration.
+
+---
+
+## Notification Preference
+
+Stores customer notification preferences.
+
+---
+
+# Uploads
+
+## Upload
+
+Represents every uploaded asset.
+
+Supports:
+
+* Product images
+* Promotion banners
+* User avatars
+* Support attachments
+* Brand assets
+
+Business records should reference uploads instead of storing raw file information.
+
+---
+
+# Analytics
+
+## Analytics Event
+
+Stores important business events.
+
+Examples include:
+
+* Product viewed
+* Product searched
+* Added to cart
+* Removed from cart
+* Checkout started
+* Purchase completed
+* Promotion clicked
+
+Analytics should be generated from these events whenever practical.
+
+---
+
+# Administration
+
+## Audit Log
+
+Stores important administrative actions.
+
+Examples include:
+
+* Product updates
+* Inventory changes
+* Refunds
+* Category management
+* User role changes
+* Promotion management
+
+---
+
+# System
+
+## Store Settings
+
+Stores configurable application settings.
+
+Examples include:
+
+* Store name
+* Contact details
 * Currency
-* Verification status
-* Failure reason
-* Refund status
-* Refund amount
-* Payment date
-
-Relationship
-
-Belongs to one Order.
+* Shipping configuration
+* Tax configuration
+* Branding
 
 ---
 
-# Support Ticket
+## Feature Flag
 
-Represents customer support requests.
-
-## Contains
-
-* Customer
-* Subject
-* Description
-* Priority
-* Status
-* Assigned administrator
-* Resolution notes
-
-### Analytics
-
-* Created date
-* First response
-* Resolution time
-
-Relationship
-
-Belongs to User.
-
----
-
-# Notification
-
-Represents system notifications.
-
-## Contains
-
-* Recipient
-* Title
-* Message
-* Type
-* Read status
-* Delivery date
-
-Relationship
-
-Belongs to User.
-
----
-
-# Upload
-
-Represents uploaded files.
-
-## Contains
-
-* File name
-* File type
-* File size
-* Storage key
-* Public URL
-* Upload purpose
-* Upload status
-
-Relationship
-
-May belong to Products, Promotions, Users, or other future entities.
-
----
-
-# Analytics Snapshot
-
-Stores historical business metrics.
-
-## Contains
-
-* Revenue
-* Orders
-* Customers
-* Products sold
-* Average order value
-* Conversion rate
-* Refund rate
-* Promotion performance
-
-Snapshots should preserve historical reporting.
-
----
-
-# Audit Log
-
-Records important administrative actions.
-
-## Contains
-
-* Administrator
-* Action
-* Target
-* Previous value
-* Updated value
-* Timestamp
-* IP address
-
-Audit logs should never be modified after creation.
+Allows features to be enabled or disabled without code changes.
 
 ---
 
 # Relationships
 
-User
+The database should maintain strong relationships between business entities.
 
-├── Addresses
+Examples include:
 
-├── Orders
-
-├── Payments
-
-├── Wishlist
-
-├── Cart
-
-├── Notifications
-
-└── Support Tickets
-
-Category
-
-└── Products
-
-Promotion
-
-└── Products
-
-Order
-
-└── Order Items
-
-Cart
-
-└── Cart Items
-
-Product
-
-├── Images
-
-├── Categories
-
-├── Promotions
-
-├── Order Items
-
-├── Wishlist
-
-└── Cart Items
-
----
-
-# Analytics Requirements
-
-The database should support reporting for:
-
-* Revenue
-* Customer growth
-* Product performance
-* Promotion performance
-* Inventory movement
-* Order trends
-* Payment success rate
-* Refund rate
-* Customer retention
-* Customer lifetime value
-* Average order value
-* Best-selling products
-* Most viewed products
-* Cart abandonment
-* Wishlist popularity
-
-Historical reporting should remain possible.
-
----
-
-# Soft Deletion
-
-Business records should be archived rather than permanently deleted whenever practical.
-
-Archived records should remain available for reporting.
-
----
-
-# Data Integrity
-
-Relationships should preserve consistency.
-
-Referenced data should never become orphaned.
-
-Business-critical information should remain historically accurate.
+* Users own Orders.
+* Orders contain Order Items.
+* Products belong to Categories.
+* Products contain Variants.
+* Products contain Images.
+* Products participate in Promotions.
+* Customers own Carts.
+* Carts contain Cart Items.
+* Payments belong to Orders.
+* Inventory Movements belong to Products.
+* Uploads may be referenced by multiple business entities.
+* Audit Logs reference administrators.
+* Analytics Events reference users where applicable.
 
 ---
 
 # Future Expansion
 
-The database should remain extensible for future features including:
+The architecture should support future additions such as:
 
-* Product reviews
+* Product Reviews
+* Ratings
+* Loyalty Programmes
 * Coupons
-* Loyalty programs
-* Referral systems
-* Multi-store support
-* Inventory warehouses
-* Shipment providers
-* Email campaigns
-* AI recommendations
-* Internationalization
+* Gift Cards
+* Referral System
+* Multiple Warehouses
+* Multiple Vendors
+* AI Recommendations
+* Multiple Storefronts
 
-The data model should evolve without requiring major architectural changes.
+Future functionality should extend the existing models instead of replacing them.
