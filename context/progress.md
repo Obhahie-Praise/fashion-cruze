@@ -10,13 +10,13 @@ Every AI agent must update this file after every meaningful implementation.
 
 # Current Phase
 
-Phase 3: Admin Dashboard Shell — Complete
+Phase 4: Authentication UI — Complete
 
 ---
 
 # Current Goal
 
-Implement the authentication UI pages (Sign In, Sign Up, Forgot Password).
+Implement the authentication UI pages (Sign In, Sign Up, Forgot Password)
 
 ---
 
@@ -28,13 +28,13 @@ Implement the authentication UI pages (Sign In, Sign Up, Forgot Password).
 
 # Last Completed Task
 
-Admin Dashboard Shell: Full reusable dashboard layout implemented. Sidebar with Shadcn Tooltips, collapsible behaviour, and grouped navigation. Fixed top navigation with auto-generated breadcrumb, search button, notifications placeholder, theme toggle, and user dropdown. Mobile Sheet sidebar. Production build successful — 26 routes.
+Auth UI Pages (Sign In, Sign Up): Implemented a shared two-panel responsive layout for the authentication experience. Created a client-side auto-rotating image carousel using standard Unsplash placeholder images. Integrated Shadcn UI input and label primitives. Ensured matching styles, identical border radii, and proper spacing across form elements. Added a fixed bottom-right theme toggler. Validated desktop, tablet, and mobile layouts. Successfully ran build, lint, and type checking.
 
 ---
 
 # Current Focus
 
-Auth UI Pages (Sign In, Sign Up, Forgot Password)
+Connect Client Auth with custom forms and validations (Next task)
 
 ---
 
@@ -68,8 +68,11 @@ Auth UI Pages (Sign In, Sign Up, Forgot Password)
   - `src/components/dashboard/dashboard-topnav.tsx` (`DashboardTopNav`) — sticky header: sidebar toggle (desktop collapse + mobile Sheet open), search pill button, auto-generated Shadcn Breadcrumb, notifications icon button, ThemeToggle, user menu.
   - `src/components/dashboard/dashboard-user-menu.tsx` (`DashboardUserMenu`) — Shadcn DropdownMenu with initials avatar, user identity label, Profile link, Settings link, and Sign Out action (Better Auth `signOut()`).
   - `src/components/shared/theme-toggle.tsx` (`ThemeToggle`) — cycles light/dark/system via `next-themes`; SSR-safe via `useSyncExternalStore`.
-- **ESLint Config Fix**: Added `src/generated/**` and `prisma/seed.ts` to ESLint ignore list to prevent false positives from minified Prisma client.
-- **Build Checks**: Successful compilation — 26 routes, TypeScript clean, ESLint clean.
+- **Auth UI Pages**:
+  - Designed and structured `src/app/(auth)/layout.tsx` as a shared responsive shell.
+  - Created `src/components/shared/auth-carousel.tsx` for visual marketing imagery.
+  - Created `src/components/shared/social-auth.tsx` for consistent OAuth button layouts.
+  - Built `src/app/(auth)/signin/page.tsx` and `src/app/(auth)/signup/page.tsx` utilizing standard Shadcn form controls.
 
 ---
 
@@ -81,9 +84,8 @@ None (Ready for next Phase)
 
 # Next Tasks
 
-1. Implement Sign In, Sign Up, and Forgot Password UI page screens under `src/app/(auth)/`.
-2. Connect Client Auth (`src/lib/auth-client.ts`) with custom forms using React Hook Form & Zod validations including Google Sign In button.
-3. Validate session-based route redirects via `src/proxy.ts`.
+1. Connect Client Auth (`src/lib/auth-client.ts`) with custom forms using React Hook Form & Zod validations including Google Sign In button.
+2. Validate session-based route redirects via `src/proxy.ts`.
 
 ---
 
@@ -144,6 +146,10 @@ None
 - `src/components/dashboard/sidebar-nav-item.tsx`
 - `src/components/dashboard/dashboard-topnav.tsx`
 - `src/components/dashboard/dashboard-user-menu.tsx`
+- `src/components/shared/auth-carousel.tsx`
+- `src/components/shared/social-auth.tsx`
+- `src/components/ui/input.tsx`
+- `src/components/ui/label.tsx`
 
 ---
 
@@ -156,6 +162,8 @@ Shadcn UI components (via `shadcn` CLI — `@base-ui/react` primitives):
 - `src/components/ui/separator.tsx`
 - `src/components/ui/button.tsx`
 - `src/components/ui/sheet.tsx`
+- `src/components/ui/input.tsx`
+- `src/components/ui/label.tsx`
 
 ---
 
@@ -163,7 +171,7 @@ Shadcn UI components (via `shadcn` CLI — `@base-ui/react` primitives):
 
 - TypeScript: ✅ 100% Type-safe
 - ESLint: ✅ Clean
-- Build: ✅ Successful compilation (`pnpm run build`) — 26 routes, Proxy active
+- Build: ✅ Successful compilation (`npm run build`) — 26 routes, Proxy active
 
 ---
 
@@ -175,78 +183,5 @@ Shadcn UI components (via `shadcn` CLI — `@base-ui/react` primitives):
 - Shadcn UI in this project uses `@base-ui/react` primitives — there is no `asChild` prop. Use the `render` prop pattern instead (e.g. `<TooltipTrigger render={<Link href="..." />}>`).
 - The `react-hooks/set-state-in-effect` ESLint rule is active. Use `useSyncExternalStore` instead of `useState + useEffect` for client-detection patterns.
 - ESLint config must explicitly ignore `src/generated/**` — Prisma generates minified client code that produces hundreds of false-positive lint errors.
-
-
-# Blockers
-
-None
-
----
-
-# Technical Debt
-
-None
-
----
-
-# Database Changes
-
-- Migrated all domains: Core, Catalog, Inventory, Customers, Orders, Payments, Marketing, Support, Notifications, System.
-- Created `prisma/seed.ts` for dummy data population.
-
----
-
-# Routes Added
-
-- `GET /`
-- `GET /signin`
-- `GET /signup`
-- `GET /forgot-password`
-- `GET /support`
-- `GET /products`
-- `GET /products/[slug]`
-- `GET /cart`
-- `GET /checkout`
-- `GET /profile`
-- `GET /orders`
-- `GET /wishlist`
-- `GET /dashboard/overview`
-- `GET /dashboard/orders`
-- `GET /dashboard/products`
-- `GET /dashboard/customers`
-- `GET /dashboard/categories`
-- `GET /dashboard/promotions`
-- `GET /dashboard/analytics`
-- `GET /dashboard/support`
-- `GET /dashboard/settings`
-- `GET /dashboard/profile`
-- `GET|POST /api/uploadthing`
-- `GET|POST /api/auth/[...better-auth]`
-
----
-
-# Components Added
-
-- `src/components/providers.tsx`
-
----
-
-# Dependencies Added
-
-No new dependencies added in this phase (all already present).
-
----
-
-# Testing Status
-
-- TypeScript: ✅ 100% Type-safe
-- ESLint: ✅ Clean
-- Build: ✅ Successful compilation (`pnpm run build`) — 26 routes, Proxy active
-
----
-
-# Session Notes
-
-- Next.js 16.2.9 uses `proxy.ts` convention (not `middleware.ts`). The exported function must be named `proxy`.
-- Better Auth `databaseHooks.user.create.before` is the correct pattern for defaulting new user roles.
-- `useListSessions` and `revokeSession` are not part of the base `ReactAuthClient` type — they require additional plugins if needed in future.
+- The `shadcn-ui` CLI is deprecated in favor of `shadcn`. Used `npx shadcn@latest add input label` to add components.
+- There are no direct project images in `public/` that correspond to the carousel placeholder content, so `unsplash.com` URLs were utilized for now inside the `AuthCarousel` component to maintain the structural layout requirements for visual testing.
