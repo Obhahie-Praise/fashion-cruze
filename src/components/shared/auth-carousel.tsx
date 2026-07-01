@@ -8,19 +8,19 @@ const slides = [
     id: 1,
     theme: "Customer Satisfaction",
     description: "Highlight the confidence and quality customers receive when shopping with Cruze.",
-    image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070&auto=format&fit=crop",
+    image: "/auth-layout/customer-satisfaction.jpg",
   },
   {
     id: 2,
     theme: "Order Tracking & Delivery",
     description: "Communicate reliable delivery and transparent order tracking.",
-    image: "https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?q=80&w=2070&auto=format&fit=crop",
+    image: "/auth-layout/order-tracking.png",
   },
   {
     id: 3,
     theme: "Seamless Shopping Experience",
     description: "Highlight the simplicity, speed, and premium shopping experience offered by Cruze.",
-    image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=2070&auto=format&fit=crop",
+    image: "/auth-layout/customer-experience.jpg",
   },
 ];
 
