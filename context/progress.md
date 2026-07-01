@@ -10,13 +10,13 @@ Every AI agent must update this file after every meaningful implementation.
 
 # Current Phase
 
-Phase 4: Authentication UI — Complete
+Phase 5: Customer Flow & Cart (Next)
 
 ---
 
 # Current Goal
 
-Implement the authentication UI pages (Sign In, Sign Up, Forgot Password)
+Implement the customer core flows: store exploration, product details, and cart functionality.
 
 ---
 
@@ -28,13 +28,22 @@ Implement the authentication UI pages (Sign In, Sign Up, Forgot Password)
 
 # Last Completed Task
 
-Auth UI Pages (Sign In, Sign Up): Implemented a shared two-panel responsive layout for the authentication experience. Created a client-side auto-rotating image carousel using standard Unsplash placeholder images. Integrated Shadcn UI input and label primitives. Ensured matching styles, identical border radii, and proper spacing across form elements. Added a fixed bottom-right theme toggler. Validated desktop, tablet, and mobile layouts. Successfully ran build, lint, and type checking.
+Connected Auth UI to Better Auth:
+- Converted SignIn and SignUp pages to React Client Components
+- Integrated `react-hook-form` and `zod` for robust client-side validation
+- Splitted "Full Name" into "First Name" and "Last Name"
+- Implemented a custom Password Input with a reveal toggle
+- Added a Terms & Privacy Policy checkbox on Sign Up
+- Created a Forgot Password dialog modal using Shadcn UI
+- Fully integrated Google OAuth and Better Auth email methods
+- Finalized mobile responsive styling, ensuring the form overlaps the carousel on small screens
+- Passed all linting and production build checks
 
 ---
 
 # Current Focus
 
-Connect Client Auth with custom forms and validations (Next task)
+Product catalog and cart integration
 
 ---
 
@@ -73,19 +82,26 @@ Connect Client Auth with custom forms and validations (Next task)
   - Created `src/components/shared/auth-carousel.tsx` for visual marketing imagery.
   - Created `src/components/shared/social-auth.tsx` for consistent OAuth button layouts.
   - Built `src/app/(auth)/signin/page.tsx` and `src/app/(auth)/signup/page.tsx` utilizing standard Shadcn form controls.
+- **Auth UI Functionality**:
+  - Validations using Zod and React Hook Form for authentication pages (`src/validations/auth.ts`).
+  - Google OAuth login integrated.
+  - Custom password input with reveal toggle.
+  - Shadcn Dialog modal for Forgot Password reset flow.
+  - Better Auth email signup and signin APIs fully integrated with role-based redirection.
+  - Mobile layout polished with rounded corners and drop shadows overlapping the visual carousel.
 
 ---
 
 # Work In Progress
 
-None (Ready for next Phase)
+None (Ready for next phase)
 
 ---
 
 # Next Tasks
 
-1. Connect Client Auth (`src/lib/auth-client.ts`) with custom forms using React Hook Form & Zod validations including Google Sign In button.
-2. Validate session-based route redirects via `src/proxy.ts`.
+1. Implement public-facing catalog functionality (fetching products from Neon).
+2. Build Cart UI and local/server synchronization.
 
 ---
 
@@ -148,8 +164,17 @@ None
 - `src/components/dashboard/dashboard-user-menu.tsx`
 - `src/components/shared/auth-carousel.tsx`
 - `src/components/shared/social-auth.tsx`
+- `src/components/ui/tooltip.tsx`
+- `src/components/ui/breadcrumb.tsx`
+- `src/components/ui/dropdown-menu.tsx`
+- `src/components/ui/separator.tsx`
+- `src/components/ui/button.tsx`
+- `src/components/ui/sheet.tsx`
 - `src/components/ui/input.tsx`
 - `src/components/ui/label.tsx`
+- `src/components/ui/checkbox.tsx`
+- `src/components/ui/dialog.tsx`
+- `src/components/ui/password-input.tsx`
 
 ---
 
@@ -164,6 +189,13 @@ Shadcn UI components (via `shadcn` CLI — `@base-ui/react` primitives):
 - `src/components/ui/sheet.tsx`
 - `src/components/ui/input.tsx`
 - `src/components/ui/label.tsx`
+- `src/components/ui/checkbox.tsx`
+- `src/components/ui/dialog.tsx`
+
+Additional Libraries:
+- `react-hook-form`
+- `@hookform/resolvers`
+- `zod`
 
 ---
 
