@@ -11,6 +11,13 @@ const envSchema = z.object({
   // File uploads
   UPLOADTHING_TOKEN: z.string().min(1, "UPLOADTHING_TOKEN is required"),
 
+  // App URL
+  NEXT_PUBLIC_APP_URL: z.string().url("NEXT_PUBLIC_APP_URL must be a valid URL"),
+
+  // Google OAuth
+  GOOGLE_CLIENT_ID: z.string().min(1, "GOOGLE_CLIENT_ID is required"),
+  GOOGLE_CLIENT_SECRET: z.string().min(1, "GOOGLE_CLIENT_SECRET is required"),
+
   // Node environment
   NODE_ENV: z
     .enum(["development", "production", "test"])
