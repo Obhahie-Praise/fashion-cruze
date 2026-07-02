@@ -7,7 +7,15 @@ import {
   BarChart2Icon,
   RefreshCwIcon,
   DownloadIcon,
+  CalendarIcon,
 } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import type { DateFilterRange } from "@/actions/dashboard-overview";
 
 const DATE_RANGE_OPTIONS: { label: string; value: DateFilterRange }[] = [
@@ -25,7 +33,7 @@ export function OverviewHeader() {
   const [isPending, startTransition] = useTransition();
   const [isExporting, startExportTransition] = useTransition();
   const [range, setRange] = useQueryState<DateFilterRange>("range", {
-    defaultValue: "this_month",
+    defaultValue: "all_time",
     parse: (v) => v as DateFilterRange,
   });
 
@@ -55,42 +63,30 @@ export function OverviewHeader() {
         </div>
       </div>
 
-      {/* Controls */}
+      {/* Controls — order: Date Filter | Export PDF | Reload (rightmost) */}
       <div className="flex items-center gap-2 flex-wrap">
-        {/* Date Range Select */}
-        <div className="relative">
-          <select
-            id="overview-date-range"
-            value={range}
-            onChange={(e) => setRange(e.target.value as DateFilterRange)}
-            className="h-9 rounded-md border border-border bg-background px-3 pr-8 text-sm text-foreground appearance-none cursor-pointer transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            aria-label="Select date range"
-          >
-            {DATE_RANGE_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
-          <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground">
-            ▾
-          </span>
-        </div>
 
-        {/* Refresh */}
-        <button
-          type="button"
-          onClick={handleRefresh}
-          disabled={isPending}
-          aria-label="Refresh dashboard data"
-          className="flex size-9 items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
+        {/* Date Range Select — Shadcn Select with calendar icon */}
+        <Select
+          value={range}
+          onValueChange={(value) => setRange(value as DateFilterRange)}
         >
-          <RefreshCwIcon
-            size={15}
-            aria-hidden="true"
-            className={isPending ? "animate-spin" : ""}
-          />
-        </button>
+          <SelectTrigger
+            id="overview-date-range"
+            aria-label="Select date range"
+            className="h-9 gap-2 text-sm"
+          >
+            <CalendarIcon size={14} className="text-muted-foreground shrink-0" aria-hidden="true" />
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent align="end">
+            {DATE_RANGE_OPTIONS.map((opt) => (
+              <SelectItem key={opt.value} value={opt.value}>
+                {opt.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
 
         {/* Export PDF */}
         <button
@@ -108,6 +104,21 @@ export function OverviewHeader() {
           <span className="hidden sm:inline">
             {isExporting ? "Generating…" : "Export PDF"}
           </span>
+        </button>
+
+        {/* Reload — always rightmost */}
+        <button
+          type="button"
+          onClick={handleRefresh}
+          disabled={isPending}
+          aria-label="Refresh dashboard data"
+          className="flex size-9 items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
+        >
+          <RefreshCwIcon
+            size={15}
+            aria-hidden="true"
+            className={isPending ? "animate-spin" : ""}
+          />
         </button>
       </div>
     </div>

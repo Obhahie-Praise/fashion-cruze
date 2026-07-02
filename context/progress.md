@@ -28,15 +28,14 @@ Implement the customer core flows: store exploration, product details, and cart 
 
 # Last Completed Task
 
-Implemented the full Dashboard Overview page:
-- Rewrote `src/app/(dashboard)/dashboard/overview/page.tsx` as a full Server Component with Suspense boundaries for every section
-- Added `NuqsAdapter` to `src/components/providers.tsx` so `useQueryState` works across the app
-- Built 10 overview components (metric cards, business health, revenue chart, customer chart, recent events, recent customer activity, top categories, low stock, recent products/orders/top products) — all with skeleton loaders
-- Implemented `src/actions/dashboard-overview.ts` with 9 data-fetching Server Actions supporting the date range filter
-- Created `src/components/dashboard/overview/dashboard-report.tsx` — a 2-page structured PDF using `@react-pdf/renderer`
-- Created `src/app/api/dashboard/report/route.ts` — admin-protected API route that fetches all data in parallel, renders PDF server-side, and streams it as a downloadable attachment
-- Updated `OverviewHeader` to wire the Export PDF button to the API route with current date range
-- Passed TypeScript (0 errors), ESLint (0 errors, 13 pre-existing warnings), and production build (26 routes)
+Refined the Admin Dashboard & Authentication:
+- **Layout**: Fixed the dashboard shell so the sidebar and top navigation remain fixed to the viewport while only the content scrolls (`h-screen overflow-hidden` wrapper).
+- **Date Filter**: Replaced plain `<select>` with a Shadcn `Select` component, including a calendar icon and defaulting to `"all_time"`.
+- **Metrics Layout**: Adjusted the Overview metrics to display in a 3×2 grid layout rather than a single row on large screens.
+- **Charts Polish**: Updated `RevenueAnalyticsChart` and `CustomerAnalyticsChart` to use `type="natural"` for smooth curves, increased line weight, and added gradient shading beneath each line for a premium feel.
+- **Global Scrollbars**: Added custom, minimal CSS scrollbars globally in `globals.css`.
+- **Role Verification**: Verified that `src/lib/auth.ts` correctly assigns the `customer` role by default via `databaseHooks.user.create.before`.
+- Verified TypeScript (0 errors), ESLint (0 errors, 11 warnings), and ran a successful production build.
 
 ---
 

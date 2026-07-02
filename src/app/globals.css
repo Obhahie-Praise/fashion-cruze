@@ -93,4 +93,21 @@
     font-family: var(--font-sans);
     font-feature-settings: "rlig" 1, "calt" 1;
   }
+
+  /* Minimal Scrollbar applied globally */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  *::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--border));
+    border-radius: 9999px;
+  }
 }

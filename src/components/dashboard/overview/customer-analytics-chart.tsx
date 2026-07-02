@@ -2,8 +2,8 @@
 
 import {
   ResponsiveContainer,
-  LineChart,
-  Line,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   Tooltip,
@@ -32,18 +32,27 @@ function CustomTooltip({
 }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-md border border-border bg-popover px-3 py-2 text-xs shadow-md">
-      <p className="mb-1.5 font-medium text-foreground">
-        {label ? format(parseISO(label), "MMM d, yyyy") : ""}
+    <div className="rounded-lg border border-border bg-popover px-3.5 py-2.5 text-xs shadow-lg">
+      <p className="mb-2 text-xs font-medium text-muted-foreground">
+        {label ? format(parseISO(label), "MMMM d, yyyy") : ""}
       </p>
-      {payload.map((item) => (
-        <p key={item.name} className="text-muted-foreground">
-          <span style={{ color: item.color }} className="font-medium">
-            {item.name}:{" "}
-          </span>
-          {item.value.toLocaleString()}
-        </p>
-      ))}
+      <div className="flex flex-col gap-1.5">
+        {payload.map((item) => (
+          <div key={item.name} className="flex items-center justify-between gap-6">
+            <span className="flex items-center gap-1.5 text-foreground">
+              <span
+                className="inline-block size-2 rounded-full shrink-0"
+                style={{ backgroundColor: item.color }}
+                aria-hidden="true"
+              />
+              {item.name}
+            </span>
+            <span className="font-medium text-foreground">
+              {item.value.toLocaleString()}
+            </span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -60,13 +69,23 @@ export function CustomerAnalyticsChart({ data }: CustomerAnalyticsChartProps) {
   }
 
   return (
-    <div className="rounded-lg border border-border bg-card p-4">
+    <div className="rounded-lg border border-border bg-card p-5">
       <h2 className="text-base font-medium mb-0.5">Customer Growth</h2>
-      <p className="text-xs text-muted-foreground mb-4">
+      <p className="text-xs text-muted-foreground mb-5">
         New registrations and cumulative customers
       </p>
-      <ResponsiveContainer width="100%" height={220}>
-        <LineChart data={data} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
+      <ResponsiveContainer width="100%" height={240}>
+        <AreaChart data={data} margin={{ top: 6, right: 4, left: 0, bottom: 0 }}>
+          <defs>
+            <linearGradient id="gradNewCust" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.18} />
+              <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+            </linearGradient>
+            <linearGradient id="gradTotalCust" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="hsl(var(--muted-foreground))" stopOpacity={0.14} />
+              <stop offset="100%" stopColor="hsl(var(--muted-foreground))" stopOpacity={0} />
+            </linearGradient>
+          </defs>
           <CartesianGrid
             strokeDasharray="3 3"
             stroke="hsl(var(--border))"
@@ -76,6 +95,8 @@ export function CustomerAnalyticsChart({ data }: CustomerAnalyticsChartProps) {
             dataKey="date"
             tickLine={false}
             axisLine={false}
+            interval="preserveStartEnd"
+            minTickGap={40}
             tickFormatter={(v) => {
               try {
                 return format(parseISO(v), "MMM d");
@@ -84,6 +105,7 @@ export function CustomerAnalyticsChart({ data }: CustomerAnalyticsChartProps) {
               }
             }}
             tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+            dy={6}
           />
           <YAxis
             tickLine={false}
@@ -91,25 +113,34 @@ export function CustomerAnalyticsChart({ data }: CustomerAnalyticsChartProps) {
             tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
             width={40}
           />
-          <Tooltip content={<CustomTooltip />} />
-          <Line
-            type="monotone"
+          <Tooltip 
+            content={<CustomTooltip />} 
+            cursor={{ stroke: "hsl(var(--border))", strokeWidth: 1 }}
+          />
+          <Area
+            type="natural"
             dataKey="newCustomers"
             name="New Customers"
             stroke="hsl(var(--primary))"
-            strokeWidth={1.5}
+            strokeWidth={2}
+            fill="url(#gradNewCust)"
             dot={false}
+            activeDot={{ r: 4, strokeWidth: 0 }}
+            isAnimationActive={false}
           />
-          <Line
-            type="monotone"
+          <Area
+            type="natural"
             dataKey="totalCustomers"
             name="Total Customers"
             stroke="hsl(var(--muted-foreground))"
-            strokeWidth={1.5}
-            strokeDasharray="4 2"
+            strokeWidth={2}
+            strokeDasharray="5 3"
+            fill="url(#gradTotalCust)"
             dot={false}
+            activeDot={{ r: 4, strokeWidth: 0 }}
+            isAnimationActive={false}
           />
-        </LineChart>
+        </AreaChart>
       </ResponsiveContainer>
     </div>
   );
@@ -117,10 +148,10 @@ export function CustomerAnalyticsChart({ data }: CustomerAnalyticsChartProps) {
 
 export function CustomerAnalyticsSkeleton() {
   return (
-    <div className="rounded-lg border border-border bg-card p-4">
+    <div className="rounded-lg border border-border bg-card p-5">
       <div className="h-5 w-36 rounded bg-muted animate-pulse" />
-      <div className="h-3 w-52 rounded bg-muted animate-pulse mt-1 mb-4" />
-      <div className="h-[220px] rounded bg-muted/50 animate-pulse" />
+      <div className="h-3 w-52 rounded bg-muted animate-pulse mt-1 mb-5" />
+      <div className="h-[240px] rounded bg-muted/50 animate-pulse" />
     </div>
   );
 }
