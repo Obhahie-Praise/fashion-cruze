@@ -23,7 +23,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
-    <div className="flex min-h-screen bg-muted/20">
+    <div className="flex min-h-screen">
       {/* ── Desktop / Tablet Sidebar ── */}
       <aside
         aria-label="Sidebar navigation"
@@ -31,7 +31,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
           "hidden md:flex md:flex-col md:shrink-0",
           "bg-background",
           "transition-[width] duration-200 ease-in-out",
-          isCollapsed ? "w-16" : "w-56"
+          isCollapsed ? "w-14" : "w-56"
         )}
       >
         <DashboardSidebarInner isCollapsed={isCollapsed} />
@@ -45,7 +45,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
 
         <main
           id="main-content"
-          className="flex-1 overflow-y-auto p-6 md:p-8 border-l border-t border-border rounded-tl-3xl"
+          className="flex-1 overflow-y-auto p-6 md:p-8 border-l border-t border-border rounded-tl-4xl bg-muted/10"
           tabIndex={-1}
         >
           {children}

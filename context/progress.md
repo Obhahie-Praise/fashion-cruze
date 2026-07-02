@@ -10,7 +10,7 @@ Every AI agent must update this file after every meaningful implementation.
 
 # Current Phase
 
-Phase 5: Customer Flow & Cart (Next)
+Phase 4: Admin Dashboard — Overview Complete
 
 ---
 
@@ -28,16 +28,15 @@ Implement the customer core flows: store exploration, product details, and cart 
 
 # Last Completed Task
 
-Connected Auth UI to Better Auth:
-- Converted SignIn and SignUp pages to React Client Components
-- Integrated `react-hook-form` and `zod` for robust client-side validation
-- Splitted "Full Name" into "First Name" and "Last Name"
-- Implemented a custom Password Input with a reveal toggle
-- Added a Terms & Privacy Policy checkbox on Sign Up
-- Created a Forgot Password dialog modal using Shadcn UI
-- Fully integrated Google OAuth and Better Auth email methods
-- Finalized mobile responsive styling, ensuring the form overlaps the carousel on small screens
-- Passed all linting and production build checks
+Implemented the full Dashboard Overview page:
+- Rewrote `src/app/(dashboard)/dashboard/overview/page.tsx` as a full Server Component with Suspense boundaries for every section
+- Added `NuqsAdapter` to `src/components/providers.tsx` so `useQueryState` works across the app
+- Built 10 overview components (metric cards, business health, revenue chart, customer chart, recent events, recent customer activity, top categories, low stock, recent products/orders/top products) — all with skeleton loaders
+- Implemented `src/actions/dashboard-overview.ts` with 9 data-fetching Server Actions supporting the date range filter
+- Created `src/components/dashboard/overview/dashboard-report.tsx` — a 2-page structured PDF using `@react-pdf/renderer`
+- Created `src/app/api/dashboard/report/route.ts` — admin-protected API route that fetches all data in parallel, renders PDF server-side, and streams it as a downloadable attachment
+- Updated `OverviewHeader` to wire the Export PDF button to the API route with current date range
+- Passed TypeScript (0 errors), ESLint (0 errors, 13 pre-existing warnings), and production build (26 routes)
 
 ---
 
@@ -66,29 +65,30 @@ Product catalog and cart integration
 - **Proxy (Middleware)**: Refined `src/proxy.ts` with auth, customer, and admin route guards.
 - **Design System CSS Variables**: Implemented in `src/app/globals.css`.
 - **Global Font**: Commissioner Google font wired up in `src/app/layout.tsx`.
-- **Theme & Client Providers**: `Providers` container with `next-themes`, TanStack React Query, Sonner Toaster, and TooltipProvider.
+- **Theme & Client Providers**: `Providers` container with `next-themes`, TanStack React Query, Sonner Toaster, TooltipProvider, and `NuqsAdapter`.
 - **Folder Skeleton**: Full architectural structure (`actions/`, `services/`, `components/`, `hooks/`, `stores/`, `types/`, `validations/`, `constants/`).
 - **Route Groups & Page Shells**: All 26 routes scaffolded across `(store)`, `(auth)`, `(dashboard)`.
-- **Admin Dashboard Shell**:
-  - `src/app/(dashboard)/layout.tsx` — lean Server Component, mounts DashboardShell, includes dashboard metadata.
-  - `src/components/dashboard/dashboard-shell.tsx` — Client Component managing sidebar collapse state; composes sidebar + topnav + main content.
-  - `src/components/dashboard/dashboard-sidebar.tsx` (`DashboardSidebarInner`) — nav with 9 routes in two groups (Management, System). Active state via `usePathname`. Shared between desktop aside and mobile Sheet. Brand header with icon + wordmark.
-  - `src/components/dashboard/sidebar-nav-item.tsx` (`SidebarNavItem`) — atomic nav link with icon, label, active/hover states, keyboard accessibility, and Shadcn Tooltip (base-ui `render` prop pattern).
-  - `src/components/dashboard/dashboard-topnav.tsx` (`DashboardTopNav`) — sticky header: sidebar toggle (desktop collapse + mobile Sheet open), search pill button, auto-generated Shadcn Breadcrumb, notifications icon button, ThemeToggle, user menu.
-  - `src/components/dashboard/dashboard-user-menu.tsx` (`DashboardUserMenu`) — Shadcn DropdownMenu with initials avatar, user identity label, Profile link, Settings link, and Sign Out action (Better Auth `signOut()`).
-  - `src/components/shared/theme-toggle.tsx` (`ThemeToggle`) — cycles light/dark/system via `next-themes`; SSR-safe via `useSyncExternalStore`.
-- **Auth UI Pages**:
-  - Designed and structured `src/app/(auth)/layout.tsx` as a shared responsive shell.
-  - Created `src/components/shared/auth-carousel.tsx` for visual marketing imagery.
-  - Created `src/components/shared/social-auth.tsx` for consistent OAuth button layouts.
-  - Built `src/app/(auth)/signin/page.tsx` and `src/app/(auth)/signup/page.tsx` utilizing standard Shadcn form controls.
-- **Auth UI Functionality**:
-  - Validations using Zod and React Hook Form for authentication pages (`src/validations/auth.ts`).
-  - Google OAuth login integrated.
-  - Custom password input with reveal toggle.
-  - Shadcn Dialog modal for Forgot Password reset flow.
-  - Better Auth email signup and signin APIs fully integrated with role-based redirection.
-  - Mobile layout polished with rounded corners and drop shadows overlapping the visual carousel.
+- **Admin Dashboard Shell**: Complete sidebar, top navigation, user menu, notifications, and theme toggle.
+- **Auth UI Pages**: Sign in, sign up, forgot password dialog, Google OAuth, role-based redirection.
+- **Seed Data**: `prisma/seed.ts` — 8–12 months of realistic business data using `@faker-js/faker`:
+  - 300 customers, 150 products, 800 orders, 7 categories, 5 promotions, 50 support tickets
+  - Spread timestamps, weighted order statuses by age, realistic inventory states
+- **Dashboard Overview**: Fully implemented at `/dashboard/overview`:
+  - `OverviewHeader` — nuqs URL date-range filter (7 options), refresh, PDF export
+  - `MetricCardsSection` — revenue, profit, orders, customers, products, store visits
+  - `BusinessHealthCard` — inventory, support, payments health indicators
+  - `RevenueAnalyticsChart` — Recharts AreaChart, revenue vs. profit over time
+  - `CustomerAnalyticsChart` — Recharts LineChart, new + cumulative customers
+  - `RecentEventsFeed` — latest orders with status badges
+  - `RecentCustomerActivity` — new customer registrations
+  - `TopCategoriesList` — categories by product count with progress bars
+  - `LowStockList` — inventory items at or below threshold, colour-coded
+  - `RecentProductsSection`, `RecentOrdersSection`, `TopProductsSection` — horizontal scroll card rows
+  - All sections wrapped in `<Suspense>` with matching skeleton loaders
+  - All sections respond to the global date range filter via URL search params
+- **PDF Report Export**:
+  - `src/components/dashboard/overview/dashboard-report.tsx` — 2-page `@react-pdf/renderer` document
+  - `GET /api/dashboard/report?range=…` — admin-protected route, streams PDF as download
 
 ---
 
@@ -120,7 +120,7 @@ None
 # Database Changes
 
 - Migrated all domains: Core, Catalog, Inventory, Customers, Orders, Payments, Marketing, Support, Notifications, System.
-- Created `prisma/seed.ts` for dummy data population.
+- Created `prisma/seed.ts` for dummy data population (300 customers, 150 products, 800 orders).
 
 ---
 
@@ -138,7 +138,7 @@ None
 - `GET /profile`
 - `GET /orders`
 - `GET /wishlist`
-- `GET /dashboard/overview`
+- `GET /dashboard/overview` ← **Fully implemented**
 - `GET /dashboard/orders`
 - `GET /dashboard/products`
 - `GET /dashboard/customers`
@@ -150,61 +150,51 @@ None
 - `GET /dashboard/profile`
 - `GET|POST /api/uploadthing`
 - `GET|POST /api/auth/[...better-auth]`
+- `GET /api/dashboard/report` ← **NEW**
 
 ---
 
 # Components Added
 
-- `src/components/providers.tsx` (updated — TooltipProvider added)
+- `src/components/providers.tsx` (updated — NuqsAdapter added)
 - `src/components/shared/theme-toggle.tsx`
-- **Admin Dashboard Shell Refinements**:
-  - Moved the `DashboardUserMenu` from the top navigation to the bottom of the `DashboardSidebarInner`, updating it to be a full-width interactive row displaying the user's avatar, name, and role. It automatically handles the collapsed sidebar state.
-  - Implemented the Notification UI (`DashboardNotifications`) in the top navigation, including a real-time unread count badge.
-  - Developed `NotificationService` to integrate with the Prisma `Notification` model, offering functions to create, read, and manage notifications.
-  - Created Server Actions in `src/actions/notifications.ts` to power the client-side TanStack React Query logic inside the notification dropdown.
-- `src/components/dashboard/dashboard-shell.tsx`
-- `src/components/shared/auth-carousel.tsx`
-- `src/components/shared/social-auth.tsx`
-- `src/components/ui/tooltip.tsx`
-- `src/components/ui/breadcrumb.tsx`
-- `src/components/ui/dropdown-menu.tsx`
-- `src/components/ui/separator.tsx`
-- `src/components/ui/button.tsx`
-- `src/components/ui/sheet.tsx`
-- `src/components/ui/input.tsx`
-- `src/components/ui/label.tsx`
-- `src/components/ui/checkbox.tsx`
-- `src/components/ui/dialog.tsx`
-- `src/components/ui/password-input.tsx`
+- **Admin Dashboard Shell Refinements**: sidebar, topnav, user menu, notifications
+- **Dashboard Overview Components** (`src/components/dashboard/overview/`):
+  - `overview-header.tsx`
+  - `metric-cards-section.tsx`
+  - `business-health-card.tsx`
+  - `revenue-analytics-chart.tsx`
+  - `customer-analytics-chart.tsx`
+  - `recent-events-feed.tsx`
+  - `recent-customer-activity.tsx`
+  - `top-categories-list.tsx`
+  - `low-stock-list.tsx`
+  - `horizontal-item-sections.tsx`
+  - `dashboard-report.tsx` ← **NEW**
+- Auth UI components (carousel, social auth, password input)
+- Shadcn UI components (tooltip, breadcrumb, dropdown-menu, separator, button, sheet, input, label, checkbox, dialog)
 
 ---
 
 # Dependencies Added
 
-Shadcn UI components (via `shadcn` CLI — `@base-ui/react` primitives):
-- `src/components/ui/tooltip.tsx`
-- `src/components/ui/breadcrumb.tsx`
-- `src/components/ui/dropdown-menu.tsx`
-- `src/components/ui/separator.tsx`
-- `src/components/ui/button.tsx`
-- `src/components/ui/sheet.tsx`
-- `src/components/ui/input.tsx`
-- `src/components/ui/label.tsx`
-- `src/components/ui/checkbox.tsx`
-- `src/components/ui/dialog.tsx`
+Shadcn UI components (via `shadcn` CLI — `@base-ui/react` primitives).
 
 Additional Libraries:
 - `react-hook-form`
 - `@hookform/resolvers`
 - `zod`
+- `nuqs` — URL-based state management for date range filter
+- `recharts` — AreaChart + LineChart for analytics
+- `@react-pdf/renderer` — server-side PDF generation
 
 ---
 
 # Testing Status
 
-- TypeScript: ✅ 100% Type-safe
-- ESLint: ✅ Clean
-- Build: ✅ Successful compilation (`npm run build`) — 26 routes, Proxy active
+- TypeScript: ✅ 0 errors
+- ESLint: ✅ 0 errors (13 pre-existing warnings, all harmless)
+- Build: ✅ Successful — 26 routes compiled, `/dashboard/overview` and `/api/dashboard/report` correctly Dynamic
 
 ---
 
@@ -212,9 +202,10 @@ Additional Libraries:
 
 - Next.js 16.2.9 uses `proxy.ts` convention (not `middleware.ts`). The exported function must be named `proxy`.
 - Better Auth `databaseHooks.user.create.before` is the correct pattern for defaulting new user roles.
-- `useListSessions` and `revokeSession` are not part of the base `ReactAuthClient` type — they require additional plugins if needed in future.
-- Shadcn UI in this project uses `@base-ui/react` primitives — there is no `asChild` prop. Use the `render` prop pattern instead (e.g. `<TooltipTrigger render={<Link href="..." />}>`).
+- Shadcn UI in this project uses `@base-ui/react` primitives — there is no `asChild` prop. Use the `render` prop pattern instead.
 - The `react-hooks/set-state-in-effect` ESLint rule is active. Use `useSyncExternalStore` instead of `useState + useEffect` for client-detection patterns.
-- ESLint config must explicitly ignore `src/generated/**` — Prisma generates minified client code that produces hundreds of false-positive lint errors.
-- The `shadcn-ui` CLI is deprecated in favor of `shadcn`. Used `npx shadcn@latest add input label` to add components.
-- There are no direct project images in `public/` that correspond to the carousel placeholder content, so `unsplash.com` URLs were utilized for now inside the `AuthCarousel` component to maintain the structural layout requirements for visual testing.
+- ESLint config must explicitly ignore `src/generated/**`.
+- `nuqs` requires `NuqsAdapter` wrapping the app (added to `src/components/providers.tsx`).
+- `@react-pdf/renderer` v4: `renderToBuffer` requires a type cast for the React element; the Buffer result must be wrapped in `new Uint8Array()` to be used as `Response` body.
+- Upload model uses `publicUrl` field (not `url`) — confirmed from Prisma schema.
+- Dashboard overview uses Server Components exclusively for data fetching; Recharts chart components are the only Client Components (marked `"use client"`), receiving data as serialisable props.

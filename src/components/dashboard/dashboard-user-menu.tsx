@@ -113,13 +113,13 @@ export function DashboardUserMenu({
           </DropdownMenuLabel>
         </DropdownMenuGroup>
 
-        <DropdownMenuGroup>
-          <DropdownMenuItem render={<Link href="/dashboard/profile" />}>
+        <DropdownMenuGroup className="text-xs">
+          <DropdownMenuItem render={<Link href="/dashboard/profile" />}> 
             <UserIcon size={14} aria-hidden="true" />
             Profile
           </DropdownMenuItem>
 
-          <DropdownMenuItem render={<Link href="/dashboard/settings" />}>
+          <DropdownMenuItem render={<Link href="/dashboard/settings" />}> 
             <SettingsIcon size={14} aria-hidden="true" />
             Settings
           </DropdownMenuItem>
@@ -129,7 +129,7 @@ export function DashboardUserMenu({
           <DropdownMenuItem
             variant="destructive"
             onSelect={handleSignOut}
-            className="cursor-pointer"
+            className="cursor-pointer" 
           >
             <LogOutIcon size={14} aria-hidden="true" />
             Sign out

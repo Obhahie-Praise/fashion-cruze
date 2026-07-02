@@ -137,7 +137,7 @@ export function DashboardSidebarInner({ isCollapsed }: DashboardSidebarInnerProp
         {/* Management group */}
         <div className="flex flex-col gap-1">
           {!isCollapsed && (
-            <p className="mb-2 text-sm text-foreground/80">
+            <p className="mb-2 text-sm font-medium text-foreground/80">
               Management
             </p>
 
@@ -158,7 +158,7 @@ export function DashboardSidebarInner({ isCollapsed }: DashboardSidebarInnerProp
         {/* System group */}
         <div className="flex flex-col gap-0.5">
           {!isCollapsed && (
-            <p className="mb-2 text-sm text-foreground/80">
+            <p className="mb-2 text-sm font-medium text-foreground/80">
               System
             </p>
           )}
